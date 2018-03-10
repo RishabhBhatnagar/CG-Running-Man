@@ -162,13 +162,43 @@ p.r_foot.y = p.r_knee.y + 4 * dist;
 return p;
 }
 
+Point getResultPoint
+      (Point refNode, int len, int polAngle){
+/*
+This function generates the end point of the line specified
+by the length and polar angle paramter.
+
+
+Sample Usage:
+start point is 100,100
+we want a line such that it is len=80, and angle=10deg
+Point o = 100,100
+
+Point endPoint = getResultPoint(o, 80, 10);
+
+Now, we can draw the required line as
+line(o, endPoint);
+
+*/
+Point ap, ap2;//temps for calculation
+Polar ar, ar2;
+Point resultNode;
+
+ap = refNode;
+ar.r = len; ar.t = polAngle;
+ap2 = polar_to_cart(ar);
+resultNode.x = ap.x + ap2.x;
+resultNode.y = ap.y + ap2.y;
+
+return resultNode;
+}//getResultPoint
 /*
 setP1, setP2, setP3, setP4 functions will set new co ordinates to
 the passed Point, and then drawPerson will be called.
 These functions represent one stage each out of four.
 */
 
-Person setP1(Person p){
+Person setRunP1(Person p){
 Polar ar, ar2; //temp variables for calc
 Point ap, ap2;
 
@@ -190,6 +220,7 @@ ap2 = polar_to_cart(ar);
 p.midSecTop.x = ap.x + ap2.x;
 p.midSecTop.y = ap.y + ap2.y;
 
+p.midSecTop = getResultPoint( p.neck_head, LEN_NECK, 120);
 
 //l_elbow
 ap = p.midSecTop;
@@ -200,15 +231,27 @@ p.l_elbow.y = ap.y + ap2.y;
 
 //l_hand
 ap = p.l_elbow;
-ar.r = LEN_FOREARM; ar.t = 300;//60;
+ar.r = LEN_FOREARM; ar.t = 300;
 ap2 = polar_to_cart(ar);
 p.l_hand.x = ap.x + ap2.x;
 p.l_hand.y = ap.y + ap2.y;
 
+//r_elbow
+ap = p.midSecTop;
+ar.r = LEN_UP_ARM; ar.t = 160;
+ap2 = polar_to_cart(ar);
+p.r_elbow.x = ap.x + ap2.x;
+p.r_elbow.y = ap.y + ap2.y;
 
+//r_hand
+ap = p.r_elbow;
+ar.r = LEN_FOREARM; ar.t = 110;
+ap2 = polar_to_cart(ar);
+p.r_hand.x = ap.x + ap2.x;
+p.r_hand.y = ap.y + ap2.y;
 
 return p;
-}// setP1
+}// setRunP1
 
 
 
@@ -342,7 +385,7 @@ getch();
 cleardevice(); //clear out the screen
 
 pp.head.x += stepCount;
-pp = setP1(pp);
+pp = setRunP1(pp);
 drawPerson(pp);
 
 pp.head.x += stepCount;
