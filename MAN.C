@@ -13,12 +13,14 @@ int dist = 10;
  to resize the human proportionately
  */
 
-const int LEN_NECK      = 2;
-const int LEN_UP_ARM    = 2;
-const int LEN_FOREARM   = 3;
-const int LEN_MID       = 5;
-const int LEN_THIGH     = 3;
-const int LEN_CALF      = 4;
+const int stepCount = 10;
+//replace hardcode with *dist, have to do in function
+const int LEN_NECK      = 20;// * dist;
+const int LEN_UP_ARM    = 20;// * dist;
+const int LEN_FOREARM   = 30;// * dist;
+const int LEN_MID       = 50;// * dist;
+const int LEN_THIGH     = 30;// * dist;
+const int LEN_CALF      = 40;// * dist;
 
 /*
 FUNCTIONS:
@@ -41,7 +43,9 @@ typedef struct{
 /* Converts cartesian Point to Polar*/
 Polar cart_to_polar(Point p){
 Polar a;
-a.r = sqrt(  p.x * p.x + p.y * p.y);
+int sqreq = p.x * p.x + p.y * p.y;
+if(sqreq<1) printf("DOMAIN: %3d\n", sqreq);
+a.r = sqrt( sqreq );
 a.t = atan( p.y/(float)p.x) * 180/PI;//converting radians to degrees
 
 return a;
@@ -55,7 +59,6 @@ p.y = a.r * sin(a.t * PI/180.0 );
 
 return p;
 }// polar_to_cart
-
 
 typedef struct{
 
@@ -107,9 +110,9 @@ typedef struct{
 } Person;
 
 
-Person initPerson(Person p){
-p.head.x = 100;
-p.head.y = 100;
+Person initPerson(Person p, int headx, int heady){
+p.head.x = headx; //100;
+p.head.y = heady; //100;
 p.head_r = 2 * dist;  /* upper end will always be at below point of circle*/
 
 // neck_head
@@ -158,6 +161,56 @@ p.r_foot.y = p.r_knee.y + 4 * dist;
 
 return p;
 }
+
+/*
+setP1, setP2, setP3, setP4 functions will set new co ordinates to
+the passed Point, and then drawPerson will be called.
+These functions represent one stage each out of four.
+*/
+
+Person setP1(Person p){
+Polar ar, ar2; //temp variables for calc
+Point ap, ap2;
+
+// head.x has been incremented outside, so we will not change that
+// head.y also is constant, for now atleast
+
+// neck_head
+p.neck_head.x = p.head.x;
+//p.neck_head.y ; //blank for now
+
+//////////////////////////////////////////////////
+/////////// ALL ANGLES ARE IN CW FORM  ///////////
+//////////////////////////////////////////////////
+
+// midSecTop
+ap = p.neck_head;
+ar.r = LEN_NECK; ar.t = 120;
+ap2 = polar_to_cart(ar);
+p.midSecTop.x = ap.x + ap2.x;
+p.midSecTop.y = ap.y + ap2.y;
+
+
+//l_elbow
+ap = p.midSecTop;
+ar.r = LEN_UP_ARM; ar.t = 60;
+ap2 = polar_to_cart(ar);
+p.l_elbow.x = ap.x + ap2.x;
+p.l_elbow.y = ap.y + ap2.y;
+
+//l_hand
+ap = p.l_elbow;
+ar.r = LEN_FOREARM; ar.t = 300;//60;
+ap2 = polar_to_cart(ar);
+p.l_hand.x = ap.x + ap2.x;
+p.l_hand.y = ap.y + ap2.y;
+
+
+
+return p;
+}// setP1
+
+
 
 void printPerson(Person p){
 
@@ -233,8 +286,8 @@ int main(){
 /* request auto detection */
 int gdriver = DETECT, gmode, errorcode;
 int xmax, ymax;
-Point ap;
-Polar ar;
+Point ap, ap2; //temp variables
+Polar ar, ar2;
 
 
 Person pp;
@@ -244,7 +297,7 @@ pp.head_r = 100;
 //printf("Before init : %d\n",pp.head_r);
 printPerson(pp);
 
-pp = initPerson(pp);
+pp = initPerson(pp, 300, 100);
 //printf("After  init : %d\n",pp.head_r);
 printPerson(pp);
 
@@ -267,11 +320,33 @@ getch();
 /* initialize graphics and local variables */
 initgraph(&gdriver, &gmode, "C:\\TURBOC3\\BGI");
 
-//line(0,0,200,200);
+// testing angles section
+ap.x = 100; ap.y = 100;
+ar.r = 100; ar.t = 53;//36.87
+ap2 = polar_to_cart(ar);
+circle(ap.x, ap.y, 10);//original point 100 100
+circle(ap.x + ap2.x, ap.y + ap2.y, 10); //expected to be 160 180
+line(ap.x, ap.y, ap.x + ap2.x, ap.y + ap2.y); // line connecting them
+line(ap.x, ap.y, ap.x, ap.y+ap2.y);//vertical line
+line(ap.x, ap.y+ap2.y, ap.x+ap2.x, ap.y+ap2.y);//horizontal line
+
+printf("100: %3d; 100:%3d\n", ap.x, ap.y);
+printf("160: %3d; 180:%3d\n", ap.x+ap2.x, ap.y+ap2.y);
+// testing angles section
 
 
+//for(i=0;i<3;i++){
+drawPerson(pp);
+//delay(50);
+getch();
+cleardevice(); //clear out the screen
+
+pp.head.x += stepCount;
+pp = setP1(pp);
 drawPerson(pp);
 
+pp.head.x += stepCount;
+//}//for
 
 getch();
 closegraph();
