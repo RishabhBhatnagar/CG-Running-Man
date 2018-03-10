@@ -214,41 +214,34 @@ p.neck_head.x = p.head.x;
 //////////////////////////////////////////////////
 
 // midSecTop
-ap = p.neck_head;
-ar.r = LEN_NECK; ar.t = 120;
-ap2 = polar_to_cart(ar);
-p.midSecTop.x = ap.x + ap2.x;
-p.midSecTop.y = ap.y + ap2.y;
-
 p.midSecTop = getResultPoint( p.neck_head, LEN_NECK, 120);
 
 //l_elbow
-ap = p.midSecTop;
-ar.r = LEN_UP_ARM; ar.t = 60;
-ap2 = polar_to_cart(ar);
-p.l_elbow.x = ap.x + ap2.x;
-p.l_elbow.y = ap.y + ap2.y;
+p.l_elbow = getResultPoint( p.midSecTop, LEN_UP_ARM, 60);
 
 //l_hand
-ap = p.l_elbow;
-ar.r = LEN_FOREARM; ar.t = 300;
-ap2 = polar_to_cart(ar);
-p.l_hand.x = ap.x + ap2.x;
-p.l_hand.y = ap.y + ap2.y;
+p.l_hand = getResultPoint( p.l_elbow, LEN_FOREARM, 300);
 
 //r_elbow
-ap = p.midSecTop;
-ar.r = LEN_UP_ARM; ar.t = 160;
-ap2 = polar_to_cart(ar);
-p.r_elbow.x = ap.x + ap2.x;
-p.r_elbow.y = ap.y + ap2.y;
+p.r_elbow = getResultPoint( p.midSecTop, LEN_UP_ARM, 160);
 
 //r_hand
-ap = p.r_elbow;
-ar.r = LEN_FOREARM; ar.t = 110;
-ap2 = polar_to_cart(ar);
-p.r_hand.x = ap.x + ap2.x;
-p.r_hand.y = ap.y + ap2.y;
+p.r_hand = getResultPoint(p.r_elbow, LEN_FOREARM, 110);
+
+//midSecBot
+p.midSecBot = getResultPoint(p.midSecTop, LEN_MID, 120);//same angle as midSecTop
+
+//r_knee
+p.r_knee = getResultPoint(p.midSecBot, LEN_THIGH, 50);
+
+//r_foot
+p.r_foot = getResultPoint(p.r_knee, LEN_CALF, 50);//same angle as r_knee
+
+//l_knee
+p.l_knee = getResultPoint(p.midSecBot, LEN_THIGH, 110);
+
+//l_foot
+p.l_foot = getResultPoint(p.l_knee, LEN_CALF, 190);
 
 return p;
 }// setRunP1
@@ -336,21 +329,11 @@ Polar ar, ar2;
 Person pp;
 
 clrscr();
-pp.head_r = 100;
-//printf("Before init : %d\n",pp.head_r);
-printPerson(pp);
 
 pp = initPerson(pp, 300, 100);
-//printf("After  init : %d\n",pp.head_r);
-printPerson(pp);
-
-//END MAIN
-getch();
-//return 12;
 
 //test polar/cart conversion
-
-ap.x = 12;
+/*ap.x = 12;
 ap.y = 5;
 ar = cart_to_polar(ap);
 printf("ar.r = %3d; ar.t = %3d\n", ar.r, ar.t);
@@ -358,7 +341,8 @@ printf("ar.r = %3d; ar.t = %3d\n", ar.r, ar.t);
 ap = polar_to_cart(ar);
 printf("ap.x = %3d; ap.y = %3d\n", ap.x, ap.y);
 
-getch();
+getch();*/
+//test polar/cart conversion
 
 /* initialize graphics and local variables */
 initgraph(&gdriver, &gmode, "C:\\TURBOC3\\BGI");
