@@ -265,7 +265,7 @@ p.l_elbow   = getResultPoint( p.midSecTop, LEN_UP_ARM , 85);
 p.l_hand    = getResultPoint( p.l_elbow  , LEN_FOREARM, 350);
 p.r_elbow   = getResultPoint( p.midSecTop, LEN_UP_ARM , 150);
 p.r_hand    = getResultPoint( p.r_elbow  , LEN_FOREARM, 95 );
-p.midSecBot = getResultPoint( p.midSecTop, LEN_MID    , 100);
+p.midSecBot = getResultPoint( p.midSecTop, LEN_MID    , 100);//same as midSecTop
 p.r_knee    = getResultPoint( p.midSecBot, LEN_THIGH  , 60 );
 p.r_foot    = getResultPoint( p.r_knee   , LEN_CALF   , 95 );
 p.l_knee    = getResultPoint( p.midSecBot, LEN_THIGH  , 90 );
@@ -273,6 +273,28 @@ p.l_foot    = getResultPoint( p.l_knee   , LEN_CALF   , 180);
 
 return p;
 }// setRun2
+
+Person setRunP3(Person p){
+/*
+This function will set the coordinates for running stage 1 of 4
+All points will be based on the assumption head.x has been modified outside
+this function
+*/
+p.neck_head.x = p.head.x;
+
+p.midSecTop = getResultPoint( p.neck_head, LEN_NECK   , 95 );
+p.l_elbow   = getResultPoint( p.midSecTop, LEN_UP_ARM , 90 );
+p.l_hand    = getResultPoint( p.l_elbow  , LEN_FOREARM, 15 );
+p.r_elbow   = getResultPoint( p.midSecTop, LEN_UP_ARM , 95 );
+p.r_hand    = getResultPoint( p.r_elbow  , LEN_FOREARM, 80 );
+p.midSecBot = getResultPoint( p.midSecTop, LEN_MID    , 95 );//same as midSecTop
+p.r_knee    = getResultPoint( p.midSecBot, LEN_THIGH  , 87 );
+p.r_foot    = getResultPoint( p.r_knee   , LEN_CALF   , 93 );
+p.l_knee    = getResultPoint( p.midSecBot, LEN_THIGH  , 73 );
+p.l_foot    = getResultPoint( p.l_knee   , LEN_CALF   , 165);
+
+return p;
+}// setRun3
 
 void printPerson(Person p){
 
@@ -393,6 +415,13 @@ cleardevice();
 pp = setRunP2(pp);
 drawPerson(pp);
 pp.head.x += stepCount;
+getch();
+cleardevice();
+
+pp = setRunP3(pp);
+drawPerson(pp);
+pp.head.x += stepCount;
+
 //}//for
 
 getch();
