@@ -2,6 +2,9 @@
 #include<conio.h>
 #include<stdlib.h>
 #include<graphics.h>
+#include<math.h>
+
+#define PI 3.141
 int dist = 10;
 /* represents the no of pixels to be used as one unit for the human*/
  /* since i'm translating the gimp co ordinates to turboc
@@ -9,6 +12,13 @@ int dist = 10;
  if need be, we can just change the value of dist
  to resize the human proportionately
  */
+
+const int LEN_NECK      = 2;
+const int LEN_UP_ARM    = 2;
+const int LEN_FOREARM   = 3;
+const int LEN_MID       = 5;
+const int LEN_THIGH     = 3;
+const int LEN_CALF      = 4;
 
 /*
 FUNCTIONS:
@@ -21,6 +31,30 @@ typedef struct{
   int x;
   int y;
 } Point;
+
+typedef struct{
+ int r;
+ int t;
+} Polar;
+
+
+/* Converts cartesian Point to Polar*/
+Polar cart_to_polar(Point p){
+Polar a;
+a.r = sqrt(  p.x * p.x + p.y * p.y);
+a.t = atan( p.y/(float)p.x) * 180/PI;//converting radians to degrees
+
+return a;
+}// cart_to_polar
+
+/* Converts Polar to cartesian Point*/
+Point polar_to_cart(Polar a){
+Point p;
+p.x = a.r * cos(a.t * PI/180.0 ); //converting degrees to radians
+p.y = a.r * sin(a.t * PI/180.0 );
+
+return p;
+}// polar_to_cart
 
 
 typedef struct{
@@ -199,7 +233,8 @@ int main(){
 /* request auto detection */
 int gdriver = DETECT, gmode, errorcode;
 int xmax, ymax;
-
+Point ap;
+Polar ar;
 
 
 Person pp;
@@ -217,7 +252,17 @@ printPerson(pp);
 getch();
 //return 12;
 
+//test polar/cart conversion
 
+ap.x = 12;
+ap.y = 5;
+ar = cart_to_polar(ap);
+printf("ar.r = %3d; ar.t = %3d\n", ar.r, ar.t);
+
+ap = polar_to_cart(ar);
+printf("ap.x = %3d; ap.y = %3d\n", ap.x, ap.y);
+
+getch();
 
 /* initialize graphics and local variables */
 initgraph(&gdriver, &gmode, "C:\\TURBOC3\\BGI");
