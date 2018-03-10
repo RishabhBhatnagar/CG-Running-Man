@@ -5,6 +5,7 @@
 #include<math.h>
 
 #define PI 3.141
+int i = 0;
 int dist = 10;
 /* represents the no of pixels to be used as one unit for the human*/
  /* since i'm translating the gimp co ordinates to turboc
@@ -400,7 +401,7 @@ Person pp;
 
 clrscr();
 
-pp = initPerson(pp, 300, 100);
+pp = initPerson(pp, 50, 100);
 
 /* initialize graphics and local variables */
 initgraph(&gdriver, &gmode, "C:\\TURBOC3\\BGI");
@@ -419,37 +420,42 @@ printf("100: %3d; 100:%3d\n", ap.x, ap.y);
 printf("160: %3d; 180:%3d\n", ap.x+ap2.x, ap.y+ap2.y);
 // testing angles section
 
-
-//for(i=0;i<3;i++){
 drawPerson(pp);
-pp.head.x += stepCount;
-
-
 getch();
+cleardevice();
+
+for(i=pp.head.x; pp.head.x<getmaxx() - pp.head_r && !kbhit() ; pp.head.x += stepCount){
+//pp.head.x += stepCount;
+
+delay(100);
+//getch();
 cleardevice(); //clear out the screen
 
-pp = setRunP1(pp);
-drawPerson(pp);
-pp.head.x += stepCount;
-getch();
-cleardevice();
-
-pp = setRunP2(pp);
-drawPerson(pp);
-pp.head.x += stepCount;
-getch();
-cleardevice();
-
-pp = setRunP3(pp);
-drawPerson(pp);
-pp.head.x += stepCount;
-getch();
-cleardevice();
-
-pp = setRunP4(pp);
-drawPerson(pp);
-pp.head.x+= stepCount;
-//}//for
+    i++;
+    switch(i%4){
+	case 0:
+	      pp = setRunP1(pp);
+	      drawPerson(pp);
+	      break;
+//pp.head.x += stepCount;
+//getch();
+//cleardevice();
+       case 1:
+	     pp = setRunP2(pp);
+	     drawPerson(pp);
+	     break;
+       case 2:
+	     pp = setRunP3(pp);
+	     drawPerson(pp);
+	     break;
+       case 3:
+	     pp = setRunP4(pp);
+	     drawPerson(pp);
+	     break;
+      }//switch
+//    cleardevice();
+//    pp.head.x+= stepCount;
+}//for
 
 getch();
 closegraph();
