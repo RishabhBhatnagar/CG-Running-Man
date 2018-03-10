@@ -296,6 +296,28 @@ p.l_foot    = getResultPoint( p.l_knee   , LEN_CALF   , 165);
 return p;
 }// setRun3
 
+Person setRunP4(Person p){
+/*
+This function will set the coordinates for running stage 1 of 4
+All points will be based on the assumption head.x has been modified outside
+this function
+*/
+p.neck_head.x = p.head.x;
+
+p.midSecTop = getResultPoint( p.neck_head, LEN_NECK   , 95 );
+p.l_elbow   = getResultPoint( p.midSecTop, LEN_UP_ARM , 105 );
+p.l_hand    = getResultPoint( p.l_elbow  , LEN_FOREARM, 60 );
+p.r_elbow   = getResultPoint( p.midSecTop, LEN_UP_ARM , 80 );
+p.r_hand    = getResultPoint( p.r_elbow  , LEN_FOREARM, 30 );
+p.midSecBot = getResultPoint( p.midSecTop, LEN_MID    , 95 );//same as midSecTop
+p.r_knee    = getResultPoint( p.midSecBot, LEN_THIGH  , 95 );
+p.r_foot    = getResultPoint( p.r_knee   , LEN_CALF   , 120 );
+p.l_knee    = getResultPoint( p.midSecBot, LEN_THIGH  , 60 );
+p.l_foot    = getResultPoint( p.l_knee   , LEN_CALF   , 110);
+
+return p;
+
+}// setRunP4
 void printPerson(Person p){
 
 printf("Person details:\n");
@@ -421,7 +443,12 @@ cleardevice();
 pp = setRunP3(pp);
 drawPerson(pp);
 pp.head.x += stepCount;
+getch();
+cleardevice();
 
+pp = setRunP4(pp);
+drawPerson(pp);
+pp.head.x+= stepCount;
 //}//for
 
 getch();
