@@ -199,6 +199,12 @@ These functions represent one stage each out of four.
 */
 
 Person setRunP1(Person p){
+/*
+This function will set the coordinates for running stage 1 of 4
+All points will be based on the assumption, head.x has been modified outside
+this function
+*/
+
 Polar ar, ar2; //temp variables for calc
 Point ap, ap2;
 
@@ -246,7 +252,27 @@ p.l_foot = getResultPoint(p.l_knee, LEN_CALF, 190);
 return p;
 }// setRunP1
 
+Person setRunP2(Person p){
+/*
+This function will set the coordinates for running stage 1 of 4
+All points will be based on the assumption head.x has been modified outside
+this function
+*/
+p.neck_head.x = p.head.x;
 
+p.midSecTop = getResultPoint( p.neck_head, LEN_NECK   , 100);
+p.l_elbow   = getResultPoint( p.midSecTop, LEN_UP_ARM , 85);
+p.l_hand    = getResultPoint( p.l_elbow  , LEN_FOREARM, 350);
+p.r_elbow   = getResultPoint( p.midSecTop, LEN_UP_ARM , 150);
+p.r_hand    = getResultPoint( p.r_elbow  , LEN_FOREARM, 95 );
+p.midSecBot = getResultPoint( p.midSecTop, LEN_MID    , 100);
+p.r_knee    = getResultPoint( p.midSecBot, LEN_THIGH  , 60 );
+p.r_foot    = getResultPoint( p.r_knee   , LEN_CALF   , 95 );
+p.l_knee    = getResultPoint( p.midSecBot, LEN_THIGH  , 90 );
+p.l_foot    = getResultPoint( p.l_knee   , LEN_CALF   , 180);
+
+return p;
+}// setRun2
 
 void printPerson(Person p){
 
@@ -332,18 +358,6 @@ clrscr();
 
 pp = initPerson(pp, 300, 100);
 
-//test polar/cart conversion
-/*ap.x = 12;
-ap.y = 5;
-ar = cart_to_polar(ap);
-printf("ar.r = %3d; ar.t = %3d\n", ar.r, ar.t);
-
-ap = polar_to_cart(ar);
-printf("ap.x = %3d; ap.y = %3d\n", ap.x, ap.y);
-
-getch();*/
-//test polar/cart conversion
-
 /* initialize graphics and local variables */
 initgraph(&gdriver, &gmode, "C:\\TURBOC3\\BGI");
 
@@ -364,14 +378,20 @@ printf("160: %3d; 180:%3d\n", ap.x+ap2.x, ap.y+ap2.y);
 
 //for(i=0;i<3;i++){
 drawPerson(pp);
-//delay(50);
+pp.head.x += stepCount;
+
+
 getch();
 cleardevice(); //clear out the screen
 
-pp.head.x += stepCount;
 pp = setRunP1(pp);
 drawPerson(pp);
+pp.head.x += stepCount;
+getch();
+cleardevice();
 
+pp = setRunP2(pp);
+drawPerson(pp);
 pp.head.x += stepCount;
 //}//for
 
